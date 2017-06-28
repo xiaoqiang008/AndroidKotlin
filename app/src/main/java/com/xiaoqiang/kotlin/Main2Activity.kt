@@ -14,7 +14,6 @@ import com.xiaoqiang.kotlin.base.ClassGoKotlinEx
  */
 class Main2Activity : AppCompatActivity() {
 
-//    var classGoKotlin = ClassGoKotlin("bbbb", "ssss",ClassGoKotlin("aaaa"))
     var ba = 1
     var a1 = ClassGoKotlin("aaaaa")
     //创建类
