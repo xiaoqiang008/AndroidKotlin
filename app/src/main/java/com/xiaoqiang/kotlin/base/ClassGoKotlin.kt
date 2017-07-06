@@ -83,6 +83,7 @@ open class ClassGoKotlin(param0: String, var param00: String = "赋默认初始�
         fun Test1(): String? {
             return ""
         }
+
     }
 
     //封闭类
