@@ -7,7 +7,7 @@ import java.util.concurrent.locks.Condition
 import java.util.concurrent.locks.Lock
 
 /**
- * description: Kotlin_类
+ * description: Kotlin_函数与lambda表达式
  * autour: xiaoqiang
  * mail:18767164694@126.com
  * qq:773860458

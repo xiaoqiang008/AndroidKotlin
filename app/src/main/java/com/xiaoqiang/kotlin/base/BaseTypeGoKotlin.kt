@@ -4,7 +4,7 @@ import java.util.*
 import kotlin.collections.HashSet
 
 /**
- * description: Kotlin_类
+ * description: Kotlin_基本类型与集合
  * autour: xiaoqiang
  * mail:18767164694@126.com
  * qq:773860458
