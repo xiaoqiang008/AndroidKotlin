@@ -5,6 +5,7 @@ package com.xiaoqiang.kotlin.base
  * autour: xiaoqiang
  * mail:18767164694@126.com
  * qq:773860458
+ * http://www.jianshu.com/p/904782a731db
  */
 open class ClassGoKotlin(param0: String, var param00: String = "赋默认初始值") {
 

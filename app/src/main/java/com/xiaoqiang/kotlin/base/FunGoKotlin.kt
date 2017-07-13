@@ -6,6 +6,13 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.Condition
 import java.util.concurrent.locks.Lock
 
+/**
+ * description: Kotlin_类
+ * autour: xiaoqiang
+ * mail:18767164694@126.com
+ * qq:773860458
+ * http://www.jianshu.com/p/d342d8e83a23
+ */
 
 //在 Kotlin 中函数可以在文件顶层声明，这意味着你不需要像一些语言如 Java、C# 或 Scala 那样创建一个类来保存一个函数
 fun topFun() : String{

@@ -5,6 +5,7 @@ package com.xiaoqiang.kotlin.base
  * autour: xiaoqiang
  * mail:18767164694@126.com
  * qq:773860458
+ * http://www.jianshu.com/p/904782a731db
  */
 open class ClassGoKotlinEx : ClassGoKotlin{
     override var param3 : String? = null
