@@ -151,8 +151,6 @@ class BaseTypeGoKotlin {
 //        return studentArray.get(6).name.toString()
         studentArray[6] = Student("张三")
         return studentArray.get(6).name.toString()
-
-        return ""
     }
 
     //list
@@ -181,7 +179,6 @@ class BaseTypeGoKotlin {
 
         val emptyList: List<String> = emptyList<String>()
         val nonNulls: List<String> = listOfNotNull<String>(null, "a", "b", "c")
-        return ""
     }
 
 
@@ -198,7 +195,6 @@ class BaseTypeGoKotlin {
 //        return map4.toString()
         val map5 : SortedMap<String, String> = sortedMapOf("a" to "a", "b" to "b", "c" to "c")
         return map5.toString()
-        return ""
     }
 
 
@@ -211,7 +207,6 @@ class BaseTypeGoKotlin {
 //        return set2.toString()
         val set3: SortedSet<Int> = sortedSetOf(11, 0, 9, 11, 9, 8)//0,8,9,11
         return set3.toString()
-        return ""
     }
 
     //字符串类型
@@ -224,7 +219,6 @@ class BaseTypeGoKotlin {
 //        return string3
         val string4 = "$string3.length is ${string3.length}"
         return string4 //输出a = 1.length is 5
-        return ""
     }
 
 }
