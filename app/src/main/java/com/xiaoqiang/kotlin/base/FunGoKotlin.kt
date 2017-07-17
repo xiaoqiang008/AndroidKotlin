@@ -223,7 +223,6 @@ class FunGoKotlin {
 
     fun test12() : String {
         val stings : List<String> = arrayListOf("asd","dd","ass","dddd","125")
-
         //闭包
         var sum = ""
         stings.filter { it.length == 3 }.forEach {
