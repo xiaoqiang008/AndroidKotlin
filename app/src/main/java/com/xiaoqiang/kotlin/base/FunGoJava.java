@@ -13,5 +13,8 @@ public class FunGoJava {
 
     }
 
+    interface test1{
+        String test2();
+    }
 
 }

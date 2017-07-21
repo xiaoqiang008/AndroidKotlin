@@ -31,6 +31,7 @@ class Main2Activity : AppCompatActivity(){
     var d : List<Int> = mutableListOf(17,12,5,67,3,10)
     var e = BaseTypeGoKotlin()
     var f = ControlGoKotlin()
+    var g = InterfaceGoKotlin()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +49,8 @@ class Main2Activity : AppCompatActivity(){
 //        Log.i(TAG, e.test10())
 
 //        Log.i(TAG, f.test3(FunGoKotlin()))
-        Log.i(TAG, f.test7())
+//        Log.i(TAG, f.test7())
+        Log.i(TAG, g.outLog())
 
         //将原java监听事件转化成Kotlin，如下
 //        lambda_button.setOnClickListener (object : View.OnClickListener {
