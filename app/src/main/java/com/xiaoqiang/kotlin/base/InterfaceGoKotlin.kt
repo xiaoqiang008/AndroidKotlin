@@ -108,4 +108,44 @@ class InterfaceGoKotlin {
         }
     }
 
+    //如果多个接口中有命名相同的属性，但属性类型不同，这个时候子类是怎么处理?如下：
+    interface inter11{
+        var stu1 : Int
+    }
+    interface inter22{
+        var stu1 : String
+    }
+    //如下这样肯定是不行的，目前还没有找到如何区分属性属于不同接口
+    //当然从研发角度看，研发者应该尽可能的避免出现这样情况，如果真的出现了呢怎么办？
+    //那么可以学java一样，用内部类继承另外一个接口来实现,如下内部类Class11
+//    inner class class12 : inter11,inter22 {
+//        override var stu1: Int
+//        override var stu1: String
+//    }
+    inner class Class11 : inter11 {
+        //必须初始化抽象属性
+        override var stu1: Int = 1
+        private var stu2 = Class22()//调用内部类属性和方法
+
+        inner private class Class22 : inter22{
+            override var stu1: String = ""
+            fun foo() : String{
+                return stu1+this@Class11.stu1 //内部类调用外部属性和方法，this@外部类
+            }
+        }
+        init {
+            stu2.stu1 = "初始化"
+        }
+        fun getStu2(): String{//调用内部类属性
+            return stu2.stu1
+        }
+        fun getFoo() : String{//调用内部类方法
+            return stu2.foo()
+        }
+    }
+    fun test4() : String{
+//        return Class11().getStu2() //输出：初始化
+        return Class11().getFoo()//输出：初始化1
+    }
+
 }
