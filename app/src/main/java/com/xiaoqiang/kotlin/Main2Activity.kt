@@ -51,8 +51,11 @@ class Main2Activity : AppCompatActivity(){
 
 //        Log.i(TAG, f.test3(FunGoKotlin()))
 //        Log.i(TAG, f.test7())
-        Log.i(TAG, g.test4())
-//        Log.i(TAG,h)
+//        Log.i(TAG, g.test4())
+//        Log.i(TAG,)
+        h.test5()
+        h.log("结束")
+//        Log.i(TAG, g.test4())
 
         //将原java监听事件转化成Kotlin，如下
 //        lambda_button.setOnClickListener (object : View.OnClickListener {
