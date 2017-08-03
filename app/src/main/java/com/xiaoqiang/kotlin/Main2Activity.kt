@@ -53,7 +53,7 @@ class Main2Activity : AppCompatActivity(){
 //        Log.i(TAG, f.test7())
 //        Log.i(TAG, g.test4())
 //        Log.i(TAG,)
-        h.test5()
+        h.test18()
         h.log("结束")
 //        Log.i(TAG, g.test4())
 
