@@ -2,7 +2,9 @@ package com.xiaoqiang.kotlin.base
 
 import android.util.Log
 import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.channels.*
 import java.util.concurrent.TimeUnit
+import kotlin.coroutines.experimental.CoroutineContext
 import kotlin.system.measureTimeMillis
 
 /**
@@ -12,6 +14,7 @@ import kotlin.system.measureTimeMillis
  * qq:773860458
  * 协程1：http://www.jianshu.com/p/fa7fb9ec836f
  * 协程2：http://www.jianshu.com/p/08268685de26
+ * 协程3：http://www.jianshu.com/p/9565d90e84ee
  */
 class CoroutinesGoKotlin {
 
@@ -329,5 +332,182 @@ class CoroutinesGoKotlin {
     }
 
 
-    /*****************   协程3()   **********************/
+    /*****************   协程3(http://www.jianshu.com/p/9565d90e84ee)   **********************/
+    //线程的调度
+    //在前面我们经常用到“CommonPool”共享的线程池，那么除了共享的线程池以为还有哪些呢，如下：
+    fun test21() = runBlocking<Unit> {
+        val jobs = arrayListOf<Job>()
+        jobs += launch(Unconfined) { // not confined -- will work with main thread
+            log("      'Unconfined': I'm working in thread ${Thread.currentThread().name}")
+        }
+        jobs += launch(coroutineContext) { // context of the parent, runBlocking coroutine
+            log("'coroutineContext': I'm working in thread ${Thread.currentThread().name}")
+        }
+        jobs += launch(CommonPool) { // will get dispatched to ForkJoinPool.commonPool (or equivalent)
+            log("      'CommonPool': I'm working in thread ${Thread.currentThread().name}")
+        }
+        jobs += launch(newSingleThreadContext("MyOwnThread")) { // will get its own new thread
+            log("          'newSTC': I'm working in thread ${Thread.currentThread().name}")
+        }
+        jobs.forEach { it.join() }
+    }
+
+    //Unconfined:无限制的，自由的,不限于任何特定线程
+    //coroutineContext:返回这个coroutine的上下文。
+    //CommonPool:共享线程的公共池,类似java里线程池，只不过这里是公共的
+    //newSingleThreadContext：创建一个单独的线程，在作业被取消时回收
+
+    //Channels
+    //Channels，它不是一个阻止放操作，而是一个挂起发送，而不是一个阻塞操作，它有一个暂停接收。可用于线程间传递数据
+    //我们先来看一个简单的示例：
+    fun test22() = runBlocking<Unit> {
+        //定义一个通道
+        val channel = Channel<Int>()
+        launch(CommonPool) {
+            for (x in 1..5) {
+                delay(1000L)
+                //在这里发送
+                channel.send(x * x)
+            }
+        }
+        repeat(5) {
+            //在这里接收
+            log(channel.receive().toString())
+        }
+        log("Done!")
+    }
+
+    //关闭通道
+    fun test23() = runBlocking<Unit> {
+        //定义一个通道
+        val channel = Channel<Int>()
+        launch(CommonPool) {
+            for (x in 1..5) {
+                delay(1000L)
+                //在这里发送
+                channel.send(x * x)
+                if(x == 4){
+                    log("关闭通道")
+                    channel.close()
+                }
+            }
+        }
+        repeat(5) {
+            //在这里接收
+            try {
+                var a = channel.receive()
+                log(a.toString())
+            }catch (e: ClosedReceiveChannelException){
+                log("关闭通道报出异常ClosedReceiveChannelException")
+            }
+            log("等待接收")
+        }
+        log("Done!")
+    }
+
+    //我们也可把通道写成方法，方法里结束通道时在接收方可以不写抛出异常，例如：
+    fun produceSquares() = produce<Int>(CommonPool) {
+        for (x in 1..5) {
+            delay(1000L)
+            send(x * x)
+            if (x == 4){
+                channel.close()
+            }
+        }
+    }
+    fun test24() = runBlocking<Unit> {
+        val squares = produceSquares()
+        squares.consumeEach { log(it.toString()) }
+        log("Done!")
+    }
+
+    //Pipelines
+    //在这里我理解为管道运输，也就是说上面produce生成通道是可以两个链接起来，每块做不同的工作，然后输出，例如：
+    fun produceSquares1() = produce<Int>(CommonPool) {
+        for (x in 1..5) {
+            delay(1000L)//这里延迟就失效了，具体原因不清楚为啥会失效
+            send(x)
+        }
+    }
+    fun produceSquares2(numbers: ReceiveChannel<Int>) = produce<Int>(CommonPool) {
+        for (x in 1..5) {
+            delay(1000L)
+            send((x * x)+1)
+        }
+    }
+    fun test25() = runBlocking<Unit> {
+        //始发地
+        val numbers = produceSquares1()
+        //通道二次加工
+        val squares = produceSquares2(numbers)
+        //最后输出
+        squares.consumeEach { log(it.toString()) }
+        log("Done!")
+        //关闭通道，回收
+        numbers.cancel()
+        squares.cancel()
+    }
+
+    //Fan-out
+    //多个coroutines 可以从一个通道接收,例如：
+    fun produceNumbers() = produce<Int>(CommonPool) {
+        var a = 1
+        while (true){
+            delay(100L)
+            send(a++)
+        }
+    }
+    fun launchProcessor(id: Int, channel: ReceiveChannel<Int>) = launch(CommonPool) {
+        channel.consumeEach {
+            log("launch#$id:收到： $it")
+        }
+    }
+    fun test26() = runBlocking<Unit> {
+        val producer = produceNumbers()
+        repeat(5) { launchProcessor(it, producer) }
+        delay(950)
+        producer.cancel() // cancel producer coroutine and thus kill them all
+    }
+
+    //Fan-in
+    //多个coroutines 可以发送到一个通道，例如
+    suspend fun sendString(channel: SendChannel<String>, s: String, time: Long) {
+        while (true) {
+            delay(time)
+            channel.send(s)
+        }
+    }
+    fun test27() = runBlocking<Unit> {
+        val channel = Channel<String>()
+        //这里两个launch间隔着向通道发送数据
+        launch(coroutineContext) { sendString(channel, "foo", 200L) }
+        launch(coroutineContext) { sendString(channel, "BAR!", 500L) }
+        repeat(6) {
+            //循环接收数据
+            log(channel.receive())
+        }
+    }
+
+    //通道缓冲区
+    //到目前为止所显示的通道没有缓冲区。当发送方和接收方相遇(又称会合)时，未缓冲通道传输元素。如果首先调用send，那么它将被挂起，直到被调用接收，如果首先调用接收，它将暂停，直到调用send。
+    fun test28() = runBlocking<Unit> {
+        //创建缓冲区大小为4的通道
+        val channel = Channel<Int>(2)
+        launch(CommonPool) {
+            repeat(5) {
+                log("Sending $it")
+                channel.send(it) //当通道缓冲区满的时候挂起,直到下方接收的时候在继续
+                delay(100L)
+            }
+        }
+        delay(3000)
+        log("开始接收")
+        launch(CommonPool) {
+            repeat(5) {
+                val a= channel.receive()//开始接收通道缓冲区里数据，上方发送被激活，继续发送
+                log("Receive $a")
+            }
+        }
+    }
+
 }
