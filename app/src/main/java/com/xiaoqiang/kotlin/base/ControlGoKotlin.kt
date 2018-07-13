@@ -84,7 +84,7 @@ class ControlGoKotlin {
             is String -> return "String"
             is Int -> return "Int"
             //还能检测自定义类类型
-            is FunGoKotlin -> return "FunGoKotlin"
+            is FunGoKotlin -> return "FunGoKotlin.kt"
             //还可以嵌套使用
             is Float -> {
                 when(x) {
@@ -135,7 +135,7 @@ class ControlGoKotlin {
 
     // Kotlin 中任何表达式都可以用标签（label）来标记。
     // 标签的格式为标识符后跟 @ 符号
-    fun test6(a: Int) : String{
+    fun test6(a: Int) : String{2
         abc@ for (i in 1..5){
             abcd@ for (j in 1..5){
                 if(i==a && j == a){

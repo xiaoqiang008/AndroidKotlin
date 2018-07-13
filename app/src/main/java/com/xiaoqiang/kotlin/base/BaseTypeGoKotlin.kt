@@ -37,6 +37,7 @@ class BaseTypeGoKotlin {
     //“==”与“===”区别
 
 
+
     fun test1() : String{
         val a : Int = 100
         val b : Int? = a

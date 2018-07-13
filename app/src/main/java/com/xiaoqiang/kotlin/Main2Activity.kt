@@ -3,9 +3,11 @@ package com.xiaoqiang.kotlin
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
 import com.xiaoqiang.kotlin.base.*
+import com.xiaoqiang.kotlin.test.AndroidAdjustResizeBugFix
 import kotlinx.android.synthetic.main.activity_main2.*
 
 /**
@@ -33,28 +35,33 @@ class Main2Activity : AppCompatActivity(){
     var f = ControlGoKotlin()
     var g = InterfaceGoKotlin()
     var h = CoroutinesGoKotlin()
+    var m = KotlinVa(2);
+    var empt = EmptySafeKotlin()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main2)
+        AndroidAdjustResizeBugFix.assistActivity(this);
         1.shls(1);
 //        ClassGoKotlin.Test()
         ClassGoJava.Tests()
 //        Log.i(TAG, b.Test())
 //        Log.i(TAG,funGouKotlin.test5(4).toString())
-//        Log.i(TAG,FunGoKotlin().test6())
-//        Log.i(TAG,FunGoKotlin().test9(4,7).toString())
+//        Log.i(TAG,FunGoKotlin.kt().test6())
+//        Log.i(TAG,FunGoKotlin.kt().test9(4,7).toString())
 //        Log.i(TAG, c.test10(3))
 //        Log.i(TAG, c.test12())
 
 //        Log.i(TAG, e.test10())
 
-//        Log.i(TAG, f.test3(FunGoKotlin()))
+//        Log.i(TAG, f.test3(FunGoKotlin.kt()))
 //        Log.i(TAG, f.test7())
 //        Log.i(TAG, g.test4())
 //        Log.i(TAG,)
-        h.test28()
-        h.log("结束")
+//        h.test28()
+        empt.test()
+//        m.test()
+        m.log("结束")
 //        Log.i(TAG, g.test4())
 
         //将原java监听事件转化成Kotlin，如下
@@ -71,7 +78,7 @@ class Main2Activity : AppCompatActivity(){
         //当然你也可以把大括号放到圆括号外面
 //        lambda_button.setOnClickListener(){toast("Lambda表达式");toast("Lambda表达式....")}
         //甚至你还可以省去圆括号，到这一步是不是感觉比java代码少很多很多，而且也很好理解
-        lambda_button.setOnClickListener{toast("Lambda表达式");toast("Lambda表达式....")}
+//        lambda_button.setOnClickListener{toast("Lambda表达式");toast("Lambda表达式....")}
         var funGoJava = FunGoJava()
     }
 
@@ -79,8 +86,13 @@ class Main2Activity : AppCompatActivity(){
         Toast.makeText(this,stu,Toast.LENGTH_SHORT).show()
     }
 
-    //Int的扩展函数
+    //Int的扩展函数  CX893A
     infix fun Int.shls(x:Int):Int{
         return x+1
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        m.log("按键：$keyCode")
+        return super.onKeyDown(keyCode, event)
     }
 }

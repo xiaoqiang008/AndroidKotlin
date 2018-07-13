@@ -12,4 +12,10 @@
         android:text="lambda表达式"
         android:id="@+id/lambda_button"/>
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="48dp" />
+
 </android.support.constraint.ConstraintLayout>

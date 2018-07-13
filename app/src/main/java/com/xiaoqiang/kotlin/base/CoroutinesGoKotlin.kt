@@ -492,20 +492,25 @@ class CoroutinesGoKotlin {
     //到目前为止所显示的通道没有缓冲区。当发送方和接收方相遇(又称会合)时，未缓冲通道传输元素。如果首先调用send，那么它将被挂起，直到被调用接收，如果首先调用接收，它将暂停，直到调用send。
     fun test28() = runBlocking<Unit> {
         //创建缓冲区大小为4的通道
-        val channel = Channel<Int>(2)
+        val channel = Channel<Int>(3)
         launch(CommonPool) {
             repeat(5) {
                 log("Sending $it")
                 channel.send(it) //当通道缓冲区满的时候挂起,直到下方接收的时候在继续
-                delay(100L)
+                delay(1000L+it*1000L)
             }
         }
-        delay(3000)
         log("开始接收")
         launch(CommonPool) {
-            repeat(5) {
-                val a= channel.receive()//开始接收通道缓冲区里数据，上方发送被激活，继续发送
-                log("Receive $a")
+            repeat(10) {
+                try {
+                    withTimeout(3000L) {
+                        val a = channel.receive()//开始接收通道缓冲区里数据，上方发送被激活，继续发送
+                        log("Receive $a // $it")
+                    }
+                }catch (e : CancellationException){
+                    log("CancellationException $it")
+                }
             }
         }
     }
